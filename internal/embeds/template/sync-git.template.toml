@@ -1,0 +1,13 @@
+[source]
+url = "https://some/url.git"
+username = "username"
+password = "password"
+
+[[destination]]
+url = "https://some/url.git"
+username = "username"
+password = "password"
+
+[git]
+path = "/usr/bin"
+sleep = 5
