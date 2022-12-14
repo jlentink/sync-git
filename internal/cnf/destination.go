@@ -14,11 +14,15 @@ type GitDestination struct {
 }
 
 func (d *GitDestination) BaseName() string {
-	pos := strings.LastIndex(d.Url, "/")
-	if pos > -1 {
-		return d.Url[pos+1:]
+	url := d.Url
+	if strings.HasSuffix(url, "/") {
+		url = url[:len(url)-1]
 	}
-	return d.Url
+	pos := strings.LastIndex(url, "/")
+	if pos > -1 {
+		return url[pos+1:]
+	}
+	return url
 }
 
 func (d *GitDestination) RemoteName() string {

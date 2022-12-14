@@ -36,11 +36,10 @@ func Clone() {
 	if err != nil {
 		log.Fatalf("Error cloning %s", err)
 	}
-	addRemotes()
 
 }
 
-func addRemotes() {
+func AddRemotes() {
 	repo := Open()
 	remotes, err := repo.Remotes()
 	if err != nil {

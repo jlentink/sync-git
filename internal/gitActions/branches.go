@@ -61,10 +61,10 @@ func BranchExists(branch string) bool {
 func Checkout(branch string) {
 	log.Debugf("Checking out %s", branch)
 	if BranchExists(branch) {
-		execute("checkout", "--track", branch)
+		execute("checkout", "--track", branch) //nolint:errcheck
 	} else {
 		localBranch := strings.Replace(branch, "origin/", "", -1)
-		execute("checkout", localBranch)
+		execute("checkout", localBranch) //nolint:errcheck
 	}
 
 }
@@ -72,11 +72,12 @@ func Checkout(branch string) {
 func Pull(branch string) {
 	localBranch := strings.Replace(branch, "origin/", "", -1)
 	log.Debugf("Pulling %s", localBranch)
-	execute("pull", "origin", localBranch)
+	execute("pull", "origin", localBranch) //nolint:errcheck
 }
 
 func Push(destination *cnf.GitDestination, branch string) {
 	repo := Open()
+	log.Debugf("Pushing %s to %s", branch, destination.RemoteName())
 	err := repo.Push(&git.PushOptions{
 		RemoteURL: destination.CloneUrl(),
 		Force:     true,

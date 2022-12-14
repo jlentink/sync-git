@@ -2,3 +2,4 @@
 sync-git.toml
 dist/
 *.git/
+/cmd/sync-git/sync-git
