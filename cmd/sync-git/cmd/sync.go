@@ -34,6 +34,10 @@ var syncCmd = &cobra.Command{
 					}
 				}
 			}
+			for _, d := range cnf.GetDestinations() {
+				gitActions.DeleteArtifactBranches(d)
+			}
+
 			if !polling {
 				break
 			}

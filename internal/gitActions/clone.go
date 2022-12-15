@@ -15,7 +15,7 @@ var _repository *git.Repository
 func HasClone() bool {
 	source := cnf.GetSource()
 	if _, err := os.Stat(source.BaseName()); err == nil {
-		log.Infof("Found %s. Skipping...", getBaseName())
+		log.Debugf("Found %s. Skipping...", getBaseName())
 		return true
 	}
 	return false

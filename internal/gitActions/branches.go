@@ -1,6 +1,7 @@
 package gitActions
 
 import (
+	"fmt"
 	"github.com/go-git/go-git/v5"
 	"github.com/subchen/go-log"
 	"os"
@@ -91,6 +92,41 @@ func Push(destination *cnf.GitDestination, branch string) {
 			os.Exit(1)
 		}
 	}
+}
+
+func DeleteArtifactBranches(destination *cnf.GitDestination) {
+	execute("fetch", "--all", "-p") //nolint:errcheck
+	sourceBranches := StripRemote(ListRemoteBranches("origin"), "origin/")
+	remoteBranches := StripRemote(ListRemoteBranches(destination.RemoteName()), destination.RemoteName())
+	for _, branch := range remoteBranches {
+		if !contains(sourceBranches, branch) {
+			log.Infof("Deleting unused branch %s in remote %s", branch, destination.RemoteName())
+			DeleteBranch(branch, destination.RemoteName())
+		}
+	}
+}
+
+func StripRemote(branches []string, remote string) []string {
+	for i, branch := range branches {
+		branches[i] = branch[strings.Index(branch, "/")+1:]
+	}
+	return branches
+}
+
+func contains(elems []string, v string) bool {
+	for _, s := range elems {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
+func DeleteBranch(branch, remote string) {
+	log.Debugf("Deleting branch %s", branch)
+	execute("branch", "-D", "-r", fmt.Sprintf("%s/%s", remote, branch)) //nolint:errcheck
+	execute("push", remote, ":"+branch)                                 //nolint:errcheck
+	execute("branch", "-D", branch)                                     //nolint:errcheck
 }
 
 func CompareRemoteChanged(branch string) bool {
